@@ -1,6 +1,6 @@
-// node-appwrite
+"use server";
 
-import { Account, Client, Databases } from "node-appwrite";
+import { Account, Avatars, Client, Databases, Storage } from "node-appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { cookies } from "next/headers";
 
@@ -17,10 +17,30 @@ export async function createSessionClient() {
     get account() {
       return new Account(client);
     },
-    get dateBases() {
+    get databases() {
       return new Databases(client);
     },
   };
 }
 
-export async function createAdminClient() {}
+export async function createAdminClient() {
+  const client = new Client()
+    .setEndpoint(appwriteConfig.endpointUrl)
+    .setProject(appwriteConfig.projectId)
+    .setKey(appwriteConfig.secretKey);
+
+  return {
+    get account() {
+      return new Account(client);
+    },
+    get databases() {
+      return new Databases(client);
+    },
+    get storage() {
+      return new Storage(client);
+    },
+    get avatars() {
+      return new Avatars(client);
+    },
+  };
+}
