@@ -1,13 +1,19 @@
 "use client";
 import React from "react";
 import { Logo } from "@/components/logo";
-import { navItems } from "@/constant";
+import { avatarPlaceholderUrl, navItems } from "@/constant";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-export function Sidebar() {
+type SidebarProps = {
+  fullName: string;
+  email: string;
+};
+
+export function Sidebar(props: SidebarProps) {
+  const { fullName, email } = props;
   const pathName = usePathname();
 
   return (
@@ -46,6 +52,27 @@ export function Sidebar() {
           })}
         </ul>
       </nav>
+      <Image
+        src="/assets/images/files-2.png"
+        alt="logo"
+        width={506}
+        height={418}
+        className="w-full"
+      />
+
+      <div className="sidebar-user-info">
+        <Image
+          src={avatarPlaceholderUrl}
+          alt="avatar"
+          width={44}
+          className="sidebar-user-avatar"
+          height={44}
+        />
+        <div className="hidden lg:block">
+          <p className="subtitle-2 capitalize">{fullName}</p>
+          <p className="subtitle-2 capitalize">{email}</p>
+        </div>
+      </div>
     </aside>
   );
 }
