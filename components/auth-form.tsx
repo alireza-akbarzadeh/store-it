@@ -145,7 +145,7 @@ export function AuthForm(props: AuthFormProps) {
           </div>
         </form>
       </Form>
-      {true && (
+      {accountId && (
         <OtpModal accountId={accountId} email={form.getValues("email")} />
       )}
     </>

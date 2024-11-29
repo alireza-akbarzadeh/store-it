@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { Query, ID } from "node-appwrite";
 import { parseStringify } from "@/lib/utils";
+import { cookies } from "next/headers";
 
 async function getUserByEmail(email: string) {
   const { databases } = await createAdminClient();
@@ -20,7 +21,7 @@ const handleError = (error: unknown, message: string) => {
   throw error;
 };
 
-async function sendEmailOTP({ email }: { email: string }) {
+export async function sendEmailOTP({ email }: { email: string }) {
   const { account } = await createAdminClient();
   try {
     const sessions = await account.createEmailToken(ID.unique(), email);
@@ -58,4 +59,28 @@ export async function createAccount({
     );
   }
   return parseStringify({ accountId });
+}
+
+export async function verifySecret({
+  accountId,
+  password,
+}: {
+  accountId: string;
+  password: string;
+}) {
+  try {
+    const { account } = await createAdminClient();
+    const session = await account.createSession(accountId, password);
+
+    (await cookies()).set("appwrite-session", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
+
+    return parseStringify({ sessionId: session.$id });
+  } catch (error) {
+    handleError(error, "Failed to verify secret");
+  }
 }
