@@ -43,7 +43,7 @@ export function OtpModal(props: OpenModal) {
         router.push("/");
       }
     } catch (error) {
-      console.log("Failed to verify OTP", error);
+      console.error("Failed to verify OTP", error);
     }
     setIsLoading(false);
   };

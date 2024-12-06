@@ -5,12 +5,19 @@ import { Search } from "@/components/search";
 import { FileUploader } from "@/components/file-uploader";
 import { signOutUser } from "@/lib/actions/user.action";
 
-export function Header() {
+type HeaderProps = {
+  userId: string;
+  accountId: string;
+};
+
+export function Header(props: HeaderProps) {
+  const { accountId, userId } = props;
+
   return (
     <header className="header">
       <Search />
       <div className="header-wrapper">
-        <FileUploader />
+        <FileUploader ownerId={userId} accountId={accountId} />
         <form
           action={async () => {
             "use server";

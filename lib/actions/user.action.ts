@@ -3,7 +3,7 @@
 import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { ID, Query } from "node-appwrite";
-import { parseStringify } from "@/lib/utils";
+import { handleError, parseStringify } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { avatarPlaceholderUrl } from "@/constant";
@@ -17,11 +17,6 @@ async function getUserByEmail(email: string) {
   );
   return result.total > 0 ? result.documents[0] : null;
 }
-
-const handleError = (error: unknown, message: string) => {
-  console.error(error, message);
-  throw error;
-};
 
 export async function sendEmailOTP({ email }: { email: string }) {
   const { account } = await createAdminClient();
