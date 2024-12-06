@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Logo } from "@/components/logo";
-import { avatarPlaceholderUrl, navItems } from "@/constant";
+import { navItems } from "@/constant";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,10 +10,11 @@ import { cn } from "@/lib/utils";
 type SidebarProps = {
   fullName: string;
   email: string;
+  avatar: string;
 };
 
 export function Sidebar(props: SidebarProps) {
-  const { fullName, email } = props;
+  const { fullName, email, avatar } = props;
   const pathName = usePathname();
 
   return (
@@ -62,7 +63,7 @@ export function Sidebar(props: SidebarProps) {
 
       <div className="sidebar-user-info">
         <Image
-          src={avatarPlaceholderUrl}
+          src={avatar}
           alt="avatar"
           width={44}
           className="sidebar-user-avatar"

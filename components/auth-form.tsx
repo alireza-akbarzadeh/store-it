@@ -72,7 +72,9 @@ export function AuthForm(props: AuthFormProps) {
           className="auth-form space-y-8"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <h1 className="form">{type === "sign-in" ? "Sign in" : "Sign up"}</h1>
+          <h1 className="auth-form">
+            {type === "sign-in" ? "Sign in" : "Sign up"}
+          </h1>
           {type === "sign-up" && (
             <FormField
               control={form.control}

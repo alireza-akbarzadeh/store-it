@@ -10,12 +10,13 @@ export default async function Layout({ children }: PropsWithChildren) {
   if (!currentUser) {
     return redirect("/sign-in");
   }
+  console.log({ currentUser });
   console.log(currentUser);
   return (
     <main className="flex h-screen">
-      <Sidebar email={currentUser.email} fullName={currentUser.fullName} />
+      <Sidebar {...currentUser} />
       <section className="flex h-full flex-1 flex-col">
-        <MobileNavigation />
+        <MobileNavigation {...currentUser} />
         <Header />
         <div className="main-content">{children}</div>
       </section>
