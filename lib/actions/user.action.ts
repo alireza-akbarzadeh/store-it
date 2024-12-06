@@ -5,6 +5,8 @@ import { appwriteConfig } from "@/lib/appwrite/config";
 import { ID, Query } from "node-appwrite";
 import { parseStringify } from "@/lib/utils";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { avatarPlaceholderUrl } from "@/constant";
 
 async function getUserByEmail(email: string) {
   const { databases } = await createAdminClient();
@@ -52,8 +54,7 @@ export async function createAccount({
       {
         fullName,
         email,
-        avatar:
-          "https://cloud.appwrite.io/v1/avatars/initials?name=Alireza+Akbarzadeh&width=80&height=80&project=console&name=Alireza+Akbarzadeh&width=80&height=80&project=console",
+        avatar: avatarPlaceholderUrl,
         accountId,
       },
     );
@@ -99,4 +100,29 @@ export async function getCurrentUser() {
   if (user.total <= 0) return null;
 
   return parseStringify(user.documents[0]);
+}
+
+export async function signOutUser() {
+  const { account } = await createSessionClient();
+  try {
+    await account.deleteSession("current");
+    (await cookies()).delete("appwrite-session");
+  } catch (error) {
+    handleError(error, "Failed to sign out user");
+  } finally {
+    redirect(`/sign-in`);
+  }
+}
+
+export async function singInUser({ email }: { email: string }) {
+  try {
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      await sendEmailOTP({ email });
+      return parseStringify({ accountId: existingUser.accountId });
+    }
+    return parseStringify({ accountId: null, error: "user not found" });
+  } catch (error) {
+    handleError(error, "Failed to send email OTP");
+  }
 }

@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Link from "next/link";
-import { createAccount } from "@/lib/actions/user.action";
+import { createAccount, singInUser } from "@/lib/actions/user.action";
 import { OtpModal } from "@/components/otp-modal";
 
 type AuthFormProps = {
@@ -53,10 +53,13 @@ export function AuthForm(props: AuthFormProps) {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      const user = await createAccount({
-        fullName: values.fullName || "",
-        email: values.email,
-      });
+      const user =
+        type === "sign-up"
+          ? await createAccount({
+              fullName: values.fullName || "",
+              email: values.email,
+            })
+          : await singInUser({ email: values.email });
       setAccountId(user.accountId);
     } catch {
       setErrorMessage("Failed to create account.Please try again.");
@@ -140,7 +143,7 @@ export function AuthForm(props: AuthFormProps) {
             </p>
             <Link
               className="ml-1 font-medium text-brand"
-              href={type === "sign-in" ? "/sign-up" : "sign-in"}
+              href={type === "sign-in" ? "/sign-up" : "/sign-in"}
             >
               {type === "sign-in" ? "sign-up" : "sign-in"}
             </Link>

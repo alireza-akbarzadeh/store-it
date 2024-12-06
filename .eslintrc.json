@@ -3,5 +3,5 @@
   "rules": {
     "no-undef": "off"
   },
-  "ignorePatterns": ["./public"]
+  "ignorePatterns": ["./public","tailwind.config.ts"]
 }
