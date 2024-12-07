@@ -3,7 +3,7 @@
 import { createAdminClient } from "@/lib/appwrite";
 import { InputFile } from "node-appwrite/file";
 import { appwriteConfig } from "@/lib/appwrite/config";
-import { ID } from "node-appwrite";
+import { ID, Models, Query } from "node-appwrite";
 import {
   constructFileUrl,
   getFileType,
@@ -11,6 +11,7 @@ import {
   parseStringify,
 } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "@/lib/actions/user.action";
 
 export async function uploadFile({
   file,
@@ -54,5 +55,40 @@ export async function uploadFile({
     return parseStringify(newFile);
   } catch (error) {
     handleError(error, "Failed to upload file");
+  }
+}
+const createQueries = (currentUser: Models.Document) => {
+  const queries = [
+    Query.or([
+      Query.equal("owner", [currentUser.$id]),
+      Query.contains("users", [currentUser.email]),
+    ]),
+  ];
+
+  return queries;
+};
+
+// TODO check why get Files method not working
+
+export async function getFiles() {
+  const { databases } = await createAdminClient();
+
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) throw new Error("User not found");
+
+    const queries = createQueries(currentUser);
+
+    const files = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesId,
+      queries,
+    );
+
+    console.log({ files });
+    return parseStringify(files);
+  } catch (error) {
+    handleError(error, "Failed to get files");
   }
 }
