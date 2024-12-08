@@ -85,8 +85,6 @@ export async function getFiles() {
       appwriteConfig.filesId,
       queries,
     );
-
-    console.log({ files });
     return parseStringify(files);
   } catch (error) {
     handleError(error, "Failed to get files");

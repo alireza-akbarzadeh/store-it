@@ -1,11 +1,11 @@
 import { Sort } from "@/components/sort";
 import { getFiles } from "@/lib/actions/file.actions";
 import { Models } from "node-appwrite";
+import { Card } from "@/components/card";
 
 export default async function PageType({ params }: SearchParamProps) {
   const type = ((await params)?.type as string) || "";
   const files = await getFiles();
-  console.log(files);
   return (
     <div className="page-container">
       <section className="w-full">
@@ -24,7 +24,7 @@ export default async function PageType({ params }: SearchParamProps) {
       {files?.total > 0 ? (
         <section className="file-list">
           {files?.documents?.map((file: Models.Document) => (
-            <p key={file.$id}>{file.$id}</p>
+            <Card file={file} key={file.$id} />
           ))}
         </section>
       ) : (

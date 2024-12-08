@@ -17,7 +17,7 @@ type FileUploaderProps = {
 };
 
 export function FileUploader(props: FileUploaderProps) {
-  const { ownerId, className, accountId } = props;
+  const { ownerId, accountId } = props;
   const path = usePathname();
   const [files, setFiles] = useState<File[]>([]);
   const { toast } = useToast();
