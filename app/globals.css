@@ -127,7 +127,7 @@
     @apply text-[16px] leading-[24px] font-medium;
   }
   .subtitle-2 {
-    @apply text-[14px] leading-[20px] font-semibold;
+    @apply text-[14px] leading-[20px] font-semibold ;
   }
   .body-1 {
     @apply text-[16px] leading-[24px] font-normal;

@@ -22,7 +22,14 @@ import Link from "next/link";
 import { constructDownloadUrl } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FileDetails } from "@/components/action-dialog-content";
+import { FileDetails, ShareInput } from "@/components/action-dialog-content";
+import { usePathname } from "next/navigation";
+
+import {
+  deleteFile,
+  renameFile,
+  updateFileUsers,
+} from "@/lib/actions/file.actions";
 
 type ActionDropdownProps = {
   file: Models.Document;
@@ -35,15 +42,49 @@ export function ActionDropdown(props: ActionDropdownProps) {
   const [action, setAction] = useState<ActionType | null>(null);
   const [name, setName] = useState(file.name);
   const [isLoading, setIsLoading] = useState(false);
+  const [emails, setEmails] = useState<string[]>([]);
 
-  const closeAllModal = () => {
+  const path = usePathname();
+
+  const closeAllModals = () => {
     setIsModalOpen(false);
     setIsDropDownOpen(false);
     setAction(null);
     setName(file.name);
   };
 
-  const handleActionClick = async () => {};
+  const handleAction = async () => {
+    if (!action) return;
+    setIsLoading(true);
+    let success = false;
+
+    const actions = {
+      rename: () =>
+        renameFile({ fileId: file.$id, name, extension: file.extension, path }),
+      share: () => updateFileUsers({ fileId: file.$id, emails, path }),
+      delete: () =>
+        deleteFile({ fileId: file.$id, bucketFileId: file.bucketFileId, path }),
+    };
+
+    success = await actions[action.value as keyof typeof actions]();
+
+    if (success) closeAllModals();
+
+    setIsLoading(false);
+  };
+
+  const handleRemoveUser = async (email: string) => {
+    const updatedEmails = emails.filter((e) => e !== email);
+
+    const success = await updateFileUsers({
+      fileId: file.$id,
+      emails: updatedEmails,
+      path,
+    });
+
+    if (success) setEmails(updatedEmails);
+    closeAllModals();
+  };
 
   const renderDialogContent = () => {
     if (!action) return null;
@@ -59,13 +100,28 @@ export function ActionDropdown(props: ActionDropdownProps) {
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           )}
           {value === "details" && <FileDetails file={file} />}
+          {value === "share" && (
+            <ShareInput
+              onInputChange={setEmails}
+              onRemove={handleRemoveUser}
+              file={file}
+            />
+          )}
+          {value === "delete" && (
+            <p className="delete-confirmation">
+              <span className="block pb-1">
+                Are you sure you want to delete {` `}
+              </span>
+              <span className="delete-file-name">{file.name}</span> ?
+            </p>
+          )}
         </DialogHeader>
-        {["rename", "share", "share"].includes(value) && (
+        {["rename", "share", "share", "delete"].includes(value) && (
           <DialogFooter className="flex flex-col gap-3 md:flex-row">
-            <Button className="modal-cancel-button" onClick={closeAllModal}>
+            <Button className="modal-cancel-button" onClick={closeAllModals}>
               Cancel
             </Button>
-            <Button className="modal-submit-button" onClick={handleActionClick}>
+            <Button className="modal-submit-button" onClick={handleAction}>
               <p className="capitalize">{value}</p>
               {isLoading && (
                 <Image

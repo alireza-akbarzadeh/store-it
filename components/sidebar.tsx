@@ -69,9 +69,9 @@ export function Sidebar(props: SidebarProps) {
           className="sidebar-user-avatar"
           height={44}
         />
-        <div className="hidden lg:block">
-          <p className="subtitle-2 capitalize">{fullName}</p>
-          <p className="subtitle-2 capitalize">{email}</p>
+        <div className="hidden w-full max-w-[200px] lg:block">
+          <p className="subtitle-2 truncate capitalize">{fullName}</p>
+          <p className="subtitle-2  truncate capitalize">{email}</p>
         </div>
       </div>
     </aside>
