@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import UserMenu from "@/components/user-menu";
 
 type SidebarProps = {
   fullName: string;
@@ -14,7 +15,6 @@ type SidebarProps = {
 };
 
 export function Sidebar(props: SidebarProps) {
-  const { fullName, email, avatar } = props;
   const pathName = usePathname();
 
   return (
@@ -61,19 +61,7 @@ export function Sidebar(props: SidebarProps) {
         className="w-full"
       />
 
-      <div className="sidebar-user-info">
-        <Image
-          src={avatar}
-          alt="avatar"
-          width={44}
-          className="sidebar-user-avatar"
-          height={44}
-        />
-        <div className="hidden w-full max-w-[200px] lg:block">
-          <p className="subtitle-2 truncate capitalize">{fullName}</p>
-          <p className="subtitle-2  truncate capitalize">{email}</p>
-        </div>
-      </div>
+      <UserMenu {...props} />
     </aside>
   );
 }

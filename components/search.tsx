@@ -11,6 +11,7 @@ import { Models } from "node-appwrite";
 import { useDebounce } from "use-debounce";
 import { Thumbnail } from "@/components/thumbnail";
 import { FormattedDateTime } from "@/components/formatted-date-time";
+import { SearchCommand } from "@/components/search-command";
 
 export function Search() {
   const [query, setQuery] = useState("");
@@ -68,7 +69,7 @@ export function Search() {
           className="search-input"
           onChange={(e) => setQuery(e.target.value)}
         />
-
+        <SearchCommand />
         {open && (
           <ul className="search-result">
             {results.length > 0 ? (

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Search } from "@/components/search";
 import { FileUploader } from "@/components/file-uploader";
 import { signOutUser } from "@/lib/actions/user.action";
+import { MenuCommand } from "@/components/menu-command";
 
 type HeaderProps = {
   userId: string;
@@ -17,6 +18,7 @@ export function Header(props: HeaderProps) {
     <header className="header">
       <Search />
       <div className="header-wrapper">
+        <MenuCommand />
         <FileUploader ownerId={userId} accountId={accountId} />
         <form
           action={async () => {
