@@ -22,6 +22,7 @@ import Link from "next/link";
 import { constructDownloadUrl } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { FileDetails } from "@/components/action-dialog-content";
 
 type ActionDropdownProps = {
   file: Models.Document;
@@ -57,6 +58,7 @@ export function ActionDropdown(props: ActionDropdownProps) {
           {value === "rename" && (
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           )}
+          {value === "details" && <FileDetails file={file} />}
         </DialogHeader>
         {["rename", "share", "share"].includes(value) && (
           <DialogFooter className="flex flex-col gap-3 md:flex-row">
