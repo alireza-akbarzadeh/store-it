@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 type LogoProps = {
